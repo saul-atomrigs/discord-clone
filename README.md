@@ -1,1 +1,1 @@
-# Discor clone
+# Discord clone
