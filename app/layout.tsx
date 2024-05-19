@@ -8,6 +8,7 @@ import {
   UserButton,
 } from '@clerk/nextjs';
 import './globals.css';
+import { ThemeProvider } from '@/components/providers/theme-provider';
 
 const font = Open_Sans({ subsets: ['latin'] });
 
@@ -23,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang='en'>
+      <html lang='en' suppressHydrationWarning>
         <body className={font.className}>
           <SignedOut>
             <SignInButton />
@@ -31,7 +32,14 @@ export default function RootLayout({
           <SignedIn>
             <UserButton afterSignOutUrl='/' />
           </SignedIn>
-          {children}
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='dark'
+            enableSystem={false}
+            storageKey='discord-theme'
+          >
+            {children}
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
