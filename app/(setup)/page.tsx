@@ -1,3 +1,4 @@
+import InitialModal from '@/components/modals/initial-modal';
 import initialProfile from '@/lib/initial-profile';
 import { redirect } from 'next/navigation';
 import React from 'react';
@@ -35,5 +36,5 @@ export default async function SetupPage() {
   /**
    * If the user is not a member of any server, display a message asking them to create one.
    */
-  return <div>Create a Server</div>;
+  return <InitialModal />;
 }
