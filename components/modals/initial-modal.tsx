@@ -1,5 +1,7 @@
 'use client';
 
+import { axios } from 'axios';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -33,6 +35,8 @@ const formSchema = z.object({
 export default function InitialModal() {
   const [isMounted, setIsMounted] = useState(false);
 
+  const router = useRouter();
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -48,8 +52,18 @@ export default function InitialModal() {
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      await axios.post('/api/servers', data);
+
+      form.reset();
+
+      router.refresh();
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   if (!isMounted) return null;
