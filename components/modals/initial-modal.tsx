@@ -1,6 +1,6 @@
 'use client';
 
-import { axios } from 'axios';
+import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
