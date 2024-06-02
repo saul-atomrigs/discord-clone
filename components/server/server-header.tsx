@@ -19,6 +19,7 @@ import {
   UserPlus,
   Users,
 } from 'lucide-react';
+import { useModal } from '@/hooks/useModalStore';
 
 interface ServerHeaderProps {
   server: ServerWithMembersWithProfiles;
@@ -28,6 +29,8 @@ interface ServerHeaderProps {
 export default function ServerHeader({ server, role }: ServerHeaderProps) {
   const isAdmin = role === MemberRole.ADMIN;
   const isModerator = isAdmin || role === MemberRole.MODERATOR;
+
+  const { onOpen } = useModal();
 
   return (
     <DropdownMenu>
@@ -40,7 +43,10 @@ export default function ServerHeader({ server, role }: ServerHeaderProps) {
 
       <DropdownMenuContent className='w-56 text-xs font-medium to-black dark:text-neutral-400 space-y-[2px]'>
         {isModerator && (
-          <DropdownMenuItem className='text-indigo-500 dark:text-indigo-300 px-3 py-2 text-sm cursor-pointer'>
+          <DropdownMenuItem
+            onClick={() => onOpen('invite')}
+            className='text-indigo-500 dark:text-indigo-300 px-3 py-2 text-sm cursor-pointer'
+          >
             Invite People
             <UserPlus className='ml-auto h-5 w-5' />
           </DropdownMenuItem>
