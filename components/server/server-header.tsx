@@ -52,13 +52,19 @@ export default function ServerHeader({ server, role }: ServerHeaderProps) {
           </DropdownMenuItem>
         )}
         {isAdmin && (
-          <DropdownMenuItem className='text-indigo-500 dark:text-indigo-300 px-3 py-2 text-sm cursor-pointer'>
+          <DropdownMenuItem
+            onClick={() => onOpen('editServer', { server })}
+            className='text-indigo-500 dark:text-indigo-300 px-3 py-2 text-sm cursor-pointer'
+          >
             Server Settings
             <Settings className='ml-auto h-5 w-5' />
           </DropdownMenuItem>
         )}
         {isAdmin && (
-          <DropdownMenuItem className='text-indigo-500 dark:text-indigo-300 px-3 py-2 text-sm cursor-pointer'>
+          <DropdownMenuItem
+            onClick={() => onOpen('members', { server })}
+            className='text-indigo-500 dark:text-indigo-300 px-3 py-2 text-sm cursor-pointer'
+          >
             Manage Members
             <Users className='ml-auto h-5 w-5' />
           </DropdownMenuItem>
