@@ -2,12 +2,15 @@
 
 import {
   Check,
+  Loader2,
   MoreVertical,
   Shield,
   ShieldAlert,
   ShieldCheck,
   ShieldQuestion,
 } from 'lucide-react';
+import { MemberRole } from '@prisma/client';
+import qs from 'query-string';
 import { useState } from 'react';
 
 import { ServerWithMembersWithProfiles } from '@/types';
@@ -25,10 +28,13 @@ import {
   DropdownMenu,
   DropdownMenuItem,
   DropdownMenuPortal,
+  DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const roleIconMap = {
   GUEST: null,
@@ -38,11 +44,53 @@ const roleIconMap = {
 
 export default function MembersModal() {
   const [loadingId, setLoadingId] = useState('');
+  const router = useRouter();
 
   const { isOpen, onClose, onOpen, type, data } = useModal();
 
   const isModalOpen = isOpen && type === 'members';
   const { server } = data as { server: ServerWithMembersWithProfiles };
+
+  const onKick = async (memberId: string) => {
+    try {
+      setLoadingId(memberId);
+
+      const url = qs.stringifyUrl({
+        url: `/api/members/${memberId}`,
+        query: {
+          serverId: server?.id,
+        },
+      });
+
+      const response = await axios.delete(url);
+      router.refresh();
+      onOpen('members', { server: response.data });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingId('');
+    }
+  };
+
+  const onRoleChange = async (memberId: string, role: MemberRole) => {
+    try {
+      setLoadingId(memberId);
+      const url = qs.stringifyUrl({
+        url: `/api/members/${memberId}`,
+        query: {
+          serverId: server?.id,
+          memberId,
+        },
+      });
+      const response = await axios.patch(url, { role });
+      router.refresh();
+      onOpen('members', { server: response.data });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingId('');
+    }
+  };
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
@@ -87,15 +135,35 @@ export default function MembersModal() {
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                           <Shield className='h-4 w-4 mr-2' />
-                          <DropdownMenuItem>Guest</DropdownMenuItem>
-                          {member.role === 'GUEST' && (
-                            <Check className='h-4 w-4 ml-auto' />
-                          )}
+                          <DropdownMenuItem
+                            onClick={() => onRoleChange(member.id, 'ADMIN')}
+                          >
+                            Guest
+                            {member.role === 'GUEST' && (
+                              <Check className='h-4 w-4 ml-auto' />
+                            )}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => onRoleChange(member.id, 'MODERATOR')}
+                          >
+                            <ShieldCheck className='h-4 w-4 mr-2' />
+                            Moderator
+                            {member.role === 'MODERATOR' && (
+                              <Check className='h-4 w-4 ml-auto' />
+                            )}
+                          </DropdownMenuItem>
                         </DropdownMenuPortal>
                       </DropdownMenuSub>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => onKick(member.id)}>
+                        Kick
+                      </DropdownMenuItem>
                     </DropdownMenu>
                   </div>
                 )}
+              {loadingId === member.id && (
+                <Loader2 className='h-4 w-4 animate-spin ml-auto text-zinc-400' />
+              )}
             </div>
           ))}
         </ScrollArea>
