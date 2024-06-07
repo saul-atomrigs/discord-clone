@@ -70,7 +70,10 @@ export default function ServerHeader({ server, role }: ServerHeaderProps) {
           </DropdownMenuItem>
         )}
         {isModerator && (
-          <DropdownMenuItem className='text-indigo-500 dark:text-indigo-300 px-3 py-2 text-sm cursor-pointer'>
+          <DropdownMenuItem
+            onClick={() => onOpen('createChannel')}
+            className='text-indigo-500 dark:text-indigo-300 px-3 py-2 text-sm cursor-pointer'
+          >
             Create Channel
             <PlusCircle className='ml-auto h-5 w-5' />
           </DropdownMenuItem>
