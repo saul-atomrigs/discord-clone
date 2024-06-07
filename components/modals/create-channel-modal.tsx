@@ -1,7 +1,7 @@
 'use client';
 
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -33,6 +33,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ChannelType } from '@prisma/client';
+import queryString from 'query-string';
 
 const formSchema = z.object({
   name: z
@@ -47,6 +48,7 @@ const formSchema = z.object({
 export default function CreateChannelModal() {
   const { isOpen, onClose, type } = useModal();
   const router = useRouter();
+  const params = useParams();
 
   const isModalOpen = isOpen && type === 'createServer';
 
@@ -63,7 +65,13 @@ export default function CreateChannelModal() {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      await axios.post('/api/servers', data);
+      const url = queryString.stringifyUrl({
+        url: 'api/channels',
+        query: {
+          serverId: params?.serverId,
+        },
+      });
+      await axios.post(url, data);
 
       form.reset();
 
@@ -113,6 +121,17 @@ export default function CreateChannelModal() {
                         {...field}
                       />
                     </FormControl>
+                    <SelectContent>
+                      {Object.values(ChannelType).map((type) => (
+                        <SelectItem
+                          key={type}
+                          value={type}
+                          className='capitalize'
+                        >
+                          {type.toLocaleLowerCase()}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
                     <FormMessage />
                   </FormItem>
                 )}
