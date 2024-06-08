@@ -16,7 +16,7 @@ import { Button } from '../ui/button';
 import useOrigin from '@/hooks/useOrigin';
 import axios from 'axios';
 
-export default function CreateServerModal() {
+export default function InviteModal() {
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
