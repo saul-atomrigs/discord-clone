@@ -80,7 +80,10 @@ export default function ServerHeader({ server, role }: ServerHeaderProps) {
         )}
         {isModerator && <DropdownMenuSeparator />}
         {isAdmin && (
-          <DropdownMenuItem className='text-rose-500 dark:text-indigo-300 px-3 py-2 text-sm cursor-pointer'>
+          <DropdownMenuItem
+            onClick={() => onOpen('deleteServer', { server })}
+            className='text-rose-500 dark:text-indigo-300 px-3 py-2 text-sm cursor-pointer'
+          >
             Delete Server
             <Trash className='ml-auto h-5 w-5' />
           </DropdownMenuItem>
