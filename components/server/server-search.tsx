@@ -26,7 +26,7 @@ export interface ServerSearchProps {
   }[];
 }
 
-export default function ServerSearch(data: ServerSearchProps['data']) {
+export default function ServerSearch(data: ServerSearchProps) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const params = useParams();
@@ -81,7 +81,7 @@ export default function ServerSearch(data: ServerSearchProps['data']) {
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
 
-          {data.map(({ label, type, data }) => {
+          {data.data.map(({ label, type, data }) => {
             if (!data?.length) return null;
 
             return (
