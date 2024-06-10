@@ -196,14 +196,9 @@ export default async function ServerSidebar({ serverId }: ServerSidebarProps) {
               server={server}
               role={role}
             />
-            {/* {members.map((member) => (
-              <ServerMember
-                key={channel.id}
-                channel={channel}
-                server={server}
-                role={role}
-              />
-            ))} */}
+            {members.map((member) => (
+              <ServerMember key={member.id} member={member} server={server} />
+            ))}
           </div>
         )}
       </ScrollArea>
